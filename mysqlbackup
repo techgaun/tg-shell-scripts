@@ -1,0 +1,25 @@
+#!/bin/bash 
+#quick dirty backup script for cron
+#samar@techgaun.com
+#2014-02-21
+
+DB_USER="admin"
+DB_PASS=$(cat /etc/psa/.psa.shadow)
+BACKUP_PATH="/mnt/backups/mysql"
+BACKUP_DATE=$(date +%Y-%m-%d)
+BACKUP_FPATH="$BACKUP_PATH/$BACKUP_DATE"
+MYSQL_CMD=$(which mysql)
+MYSQLBACKUP_CMD=$(which mysqldump)
+
+#Remove backup older than 1 months
+find $BACKUP_PATH/* -maxdepth 1 -type d -mtime +30 -exec echo {} \; #rm -rf {} \;
+
+#Create backup folder
+mkdir -p $BACKUP_FPATH
+
+#Get each DB and perform the backup
+
+for db in $($MYSQL_CMD -u $DB_USER -p$DB_PASS -e 'show databases' --skip-column-names | grep -Ev 'information_schema|test|mysql|psa_backup');
+do
+	$MYSQLBACKUP_CMD -u $DB_USER -p$DB_PASS --events --opt --single-transaction $db | gzip > "$BACKUP_FPATH/$db.gz";
+done
