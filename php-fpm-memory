@@ -1,0 +1,1 @@
+ps -ylC php-fpm --sort:rss | awk '!/RSS/ { s+=$8 } END { printf "%s\n", "Total memory used by PHP-FPM child processes: "; printf "%dM\n", s/1024 }'
