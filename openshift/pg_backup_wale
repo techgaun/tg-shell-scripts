@@ -1,0 +1,5 @@
+#!/bin/bash
+
+if [ $OPENSHIFT_POSTGRESQL_DIR ]; then
+  /usr/bin/envdir /etc/wal-e.d/env /bin/wal-e backup-push ${OPENSHIFT_POSTGRESQL_DIR}data
+fi 
