@@ -1,0 +1,26 @@
+#!/bin/bash
+PATH="$PATH:/usr/bin/"
+export USER="root"
+DISPLAY="0"
+DEPTH="16"
+GEOMETRY="1440x900"
+OPTIONS="-depth ${DEPTH} -alwaysshared -geometry ${GEOMETRY} :${DISPLAY}"
+. /lib/lsb/init-functions
+
+case "$1" in
+start)
+log_action_begin_msg "Starting vncserver for user '${USER}' on localhost:${DISPLAY}"
+su ${USER} -c "/usr/bin/vncserver ${OPTIONS}"
+;;
+
+stop)
+log_action_begin_msg "Stoping vncserver for user '${USER}' on localhost:${DISPLAY}"
+su ${USER} -c "/usr/bin/vncserver -kill :${DISPLAY}"
+;;
+
+restart)
+$0 stop
+$0 start
+;;
+esac
+exit 0
