@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Author : Samar Acharya
+# Backup large number of files even if file counts exceed ARG_MAX
+# Needs appropriate amount of memory
+# No 'Argument list too long'
+# which comes from limit based on getconf ARG_MAX
+
+WORKING_DIR="/var/ftp/data/webboxes_copied"
+DEST_DIR="/mnt/webboxes_copied"
+files=($WORKING_DIR/*)
+for ((i=0; i<${#files[*]}; i+=1000))
+do
+    s3cmd put "${files[@]:i:1000}" s3://my-test-bucket/bucket-dst/
+    mv "${files[@]:i:1000}" "${DEST_DIR}"
+done

@@ -7,7 +7,7 @@
 
 if [ $# -ne 1 ]; then
   echo "Usage: $0 <story_id>"
-        exit;
+  exit;
 fi
 
 GITHUB_AUTH="AUTH_TOKEN"
@@ -15,5 +15,5 @@ GITHUB_USR="techgaun-np"
 GITHUB_REPO="openweb"
 data=$(curl -u "$GITHUB_AUTH:x-oauth-basic https://api.github.com/repos/$GITHUB_USR/$GITHUB_REPO/pulls?head=$GITHUB_USR:$1" | grep "\"number\"" | cut -d":" -f2 | cut -d" " -f2 | cut -d"," -f1)
 if [ "x$data" != "x" ]; then
-        curl -XPATCH -u $GITHUB_AUTH:x-oauth-basic https://api.github.com/repos/$GITHUB_USR/$GITHUB_REPO/pulls/$data -d '{"state": "closed"}'
+  curl -XPATCH -u $GITHUB_AUTH:x-oauth-basic https://api.github.com/repos/$GITHUB_USR/$GITHUB_REPO/pulls/$data -d '{"state": "closed"}'
 fi
